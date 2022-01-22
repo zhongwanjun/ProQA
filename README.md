@@ -1,12 +1,12 @@
 # ProQA
 
 ## Pre-training
-to modify the number of soft prompts, you need to modify the data_args.prompt_num in the main script and the prompt_num in models/modeling_t5.py
 ```angular2html
 cd code/pretrain
 # the example pretrain script is shown in
 bash proqa_pretrain.sh
 ```
+(Note: to modify the number of soft prompts, you need to modify the data_args.prompt_num in the main script and the prompt_num in models/modeling_t5.py)
 ## Training and evaluating on downstream tasks
 ```angular2html
 cd code/downstream
