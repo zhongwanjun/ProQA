@@ -7,7 +7,7 @@ cd code/pretrain
 # the example pretrain script is shown in
 bash proqa_pretrain.sh
 ```
-##Training and evaluating on downstream tasks
+## Training and evaluating on downstream tasks
 ```angular2html
 cd code/downstream
 ```
@@ -36,7 +36,7 @@ example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets util
 example script for other dataset
 ./run.sh zeroshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-##Corpus Construction
+## Corpus Construction
 
 ### Question-Answer Pair Generation
 ```angular2html
@@ -61,7 +61,7 @@ bash inference_wikipedia_data.sh
 3. Generate pesudo QA-pair for pretraining from the inferred results
 python generate_pesudo_data.py [extractive_qapairs/abstractive_qapairs/multirc_qapairs_negopt/bool]
 ```
-###Filtering
+### Filtering
 ```
 cd corpus_construction/filtering
 
@@ -74,9 +74,9 @@ bash t5_filter.sh
 
 The pretrained QA model using 100 prompts (Note that we use 20 prompts for the experiment in the paper)
 
-- ProQA-Base
-
-- ProQA-Large
+- ProQA-Base (20 prompt)
+- ProQA-Base (100 prompt)
+- ProQA-Large (100 prompt)
 
 ### Download Synthesized Pre-training Corpus
 - Download generated QA-pairs corpus:
