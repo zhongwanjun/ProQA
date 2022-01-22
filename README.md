@@ -1,5 +1,7 @@
-#ProQA
-##Pre-training
+# ProQA
+
+## Pre-training
+
 ```angular2html
 cd code/pretrain
 # the example pretrain script is shown in
@@ -9,7 +11,7 @@ bash proqa_pretrain.sh
 ```angular2html
 cd code/downstream
 ```
-###Full data fine-tuning
+### Full data fine-tuning
 ```
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
 ./run.sh fulldata {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id [path/to/local/data]
@@ -17,7 +19,7 @@ example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets util
 example script for other dataset
 ./run.sh fulldata {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-###Few-shot Learning
+### Few-shot Learning
 ```
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id [path/to/local/data]
@@ -25,7 +27,7 @@ example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets util
 example script for other dataset
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-###Zero-shot Learning
+### Zero-shot Learning
 ```
 #some arguments are used for placeholder only
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
