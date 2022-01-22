@@ -8,6 +8,8 @@ bash proqa_pretrain.sh
 ```
 (Note: to modify the number of soft prompts, you need to modify the data_args.prompt_num in the main script and the prompt_num in models/modeling_t5.py)
 ## Training and evaluating on downstream tasks
+The nqopen|newsqa|mctest|social_iqa datasets use local preprocessed data, and the other datasets(squad,quoref,narrativeqa,drop,race,dream,...) use the huggingface datasets API for downloading.
+If you want to support more datasets or other tasks, you just need to add a function in the dataset_processors.py, and add corresponding evluation scripts (we support EM/F1/Accuracy/Rouge by now.)
 ```angular2html
 cd code/downstream
 ```
