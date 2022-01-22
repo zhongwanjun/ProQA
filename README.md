@@ -24,7 +24,7 @@ example script for other dataset
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id [path/to/local/data]
 
-example script for other dataset
+example script for other dataset (squad,quoref,narrativeqa,drop,race,dream,...)
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
 ### Zero-shot Learning
