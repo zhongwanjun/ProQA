@@ -72,7 +72,7 @@ bash t5_filter.sh
 ##Download Source
 ### Download Pre-trained Model
 
-The pretrained QA model using 100 prompts (Note that we use 20 prompts for the experiment in the paper)
+The pretrained QA model with training epochs as 5
 
 - ProQA-Base (20 prompt)
 - ProQA-Base (100 prompt)
