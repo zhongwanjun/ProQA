@@ -6,7 +6,7 @@ from nltk.corpus import stopwords
 import sys
 from multiprocessing import Pool, cpu_count
 from functools import partial
-sys.path.append('/home/t-wzhong/v-wanzho/promptQA/code/data_process')
+sys.path.append('../../../promptQA/code/data_process')
 from QGInput import QGInput
 stopwords = stopwords.words('english')
 def clean_keyword(kws):
@@ -93,7 +93,7 @@ def extract_qg_data_race_negopt_qapris(line):
     return outputs
 if __name__ == '__main__':
     type = sys.argv[1]
-    basic_dir = sys.argv[2]#'/home/t-wzhong/v-wanzho/promptQA'
+    basic_dir = sys.argv[2]
     if type=='bool':
         file_path = os.path.join(basic_dir,'wikipedia_data/wiki_raw_data/wiki_psg_keywords_100w.jsonl')
         outf_path = os.path.join(basic_dir,'wikipedia_data/qg_inference_data/bool/qg_inference_bool.jsonl')
@@ -125,7 +125,6 @@ if __name__ == '__main__':
 
     elif type=='multirc_qapair_negopt':
         file_path = sys.argv[3]
-        # file_path = os.path.join(basic_dir,'wikipedia_data/qg_inference_data/multirc_qapairs/result_wiki600w_qg_inference_multirc_qapairs_clean.jsonl')
         outf_path = os.path.join(basic_dir,'wikipedia_data/qg_inference_data/multirc_qapairs/qg_inference_multirc_qapairs_negopt.jsonl')
         data = open(file_path, 'r', encoding='utf8').readlines()
         count = 0
@@ -143,7 +142,6 @@ if __name__ == '__main__':
                 count += 1
         print(f'Total count {count}')
     elif type=='multirc_all_qapairs':
-        # file_path = '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/keywords/wiki_psg_keywords_100w.jsonl'
         file_path = os.path.join(basic_dir, 'wikipedia_data/wiki_raw_data/all_passages.jsonl')
         outf_path = os.path.join(basic_dir,'wikipedia_data/qg_inference_data/multirc_qapairs/wiki600w_qg_inference_multirc_qapairs.jsonl')
         data = json.load(open(file_path, 'r', encoding='utf8'))

@@ -294,21 +294,6 @@ class DataTrainingArguments:
 
 
 
-    # def __post_init__(self):
-    #     if self.dataset_name is None and self.train_file is None and self.validation_file is None:
-    #         raise ValueError("Need either a dataset name or a training/validation file.")
-    #     # elif self.source_lang is None or self.target_lang is None:
-    #     #     raise ValueError("Need to specify the source language and the target language.")
-    #
-    #     if self.train_file is not None:
-    #         extension = self.train_file.split(".")[-1]
-    #         # assert extension == "json", "`train_file` should be a json file."
-    #     if self.validation_file is not None:
-    #         extension = self.validation_file.split(".")[-1]
-    #         # assert extension == "json", "`validation_file` should be a json file."
-    #     if self.val_max_target_length is None:
-    #         self.val_max_target_length = self.max_target_length
-
 import copy
 def main():
     # See all possible arguments in src/transformers/training_args.py
@@ -377,28 +362,14 @@ def main():
     # Set seed before initializing model.
     set_seed(training_args.seed)
 
-    # Get the datasets: you can either provide your own JSON training and evaluation files (see below)
-    # or just provide the name of one of the public datasets available on the hub at https://huggingface.co/datasets/
-    # (the dataset will be downloaded automatically from the datasets Hub).
-    #
-    # For translation, only JSON files are supported, with one field named "translation" containing two keys for the
-    # source and target languages (unless you adapt what follows).
-    #
-    # In distributed training, the load_dataset function guarantee that only one local process can concurrently
-    # download the dataset.
     qa_task_to_file_names = {
-        # 'abstractive':
-        #     {
-        #         'train':'/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/qg_inference_data/abstractive/wiki100w_abstractive_qapairs_pesudo_training_data.jsonl',
-        #         'validation': '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/qg_inference_data/abstractive/wiki100w_abstractive_qapairs_pesudo_valing_data.jsonl'
-        #     },
+
         'abstractive':{
             'train':os.path.join(data_args.data_dir,'abstractive/scored_paq_wiki400w_data_abstractive_qapairs_pesudo_training_data_top200w.jsonl'),
             'validation':os.path.join(data_args.data_dir,'abstractive/scored_paq_wiki400w_data_abstractive_qapairs_pesudo_val_data.jsonl')
         },
         'extractive':{
-            # 'train': '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/pesudo_qa_data/extractive/scored_paq_wiki400w_data_extractive_qapairs_pesudo_training_data_top300w.jsonl',
-            # 'validation': '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/pesudo_qa_data/extractive/scored_paq_wiki400w_data_extractive_qapairs_pesudo_val_data.jsonl'
+
             'train':os.path.join(data_args.data_dir,'PAQ_data/preprocessed_paq_pesudo_qa_data_train.jsonl'),
             'validation':os.path.join(data_args.data_dir,'PAQ_data/preprocessed_paq_pesudo_qa_data_val.jsonl')
         },
@@ -464,14 +435,7 @@ def main():
             seed_dataset = {k: v.map(map_func,remove_columns=column_names,load_from_cache_file=False,
                                      ) for k, v in seed_dataset.items()}
             task2datasets[dataset] = seed_dataset
-    # See more about loading any type of standard or custom dataset (from files, python dict, pandas DataFrame, etc) at
-    # https://huggingface.co/docs/datasets/loading_datasets.html.
 
-    # Load pretrained model and tokenizer
-    #
-    # Distributed training:
-    # The .from_pretrained methods guarantee that only one local process can concurrently
-    # download model & vocab.
     config = AutoConfig.from_pretrained(
         model_args.config_name if model_args.config_name else model_args.model_name_or_path,
         cache_dir=model_args.cache_dir,
@@ -612,8 +576,7 @@ def main():
         input_ids = copy.deepcopy([format_prompt_ids+task_prompt_ids+input_ids for input_ids in model_inputs['input_ids']])
         model_inputs['input_ids'] = input_ids#[format_prompt_ids+input_ids for input_ids in model_inputs['input_ids']]
         model_inputs['attention_mask'] = [[1]*data_args.prompt_number*2+attention_mask for attention_mask in model_inputs['attention_mask']]
-        # print(model_inputs['input_ids'][0])
-        # print(model_inputs['input_ids'][0])
+
         return model_inputs
     def preprocess_validation_function(examples):
         preprocess_fn = dataset_name_to_func(examples['task_type'][0])

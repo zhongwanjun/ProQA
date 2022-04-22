@@ -17,7 +17,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
@@ -69,7 +69,7 @@ INPUT=${16}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
@@ -122,7 +122,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --max_train_samples 32 \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
@@ -174,7 +174,7 @@ INPUT=${16}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --max_train_samples 32 \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
@@ -227,7 +227,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
@@ -265,7 +265,7 @@ INPUT=${16}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
@@ -339,18 +339,3 @@ then
 else
   echo "Unknown Mode"
 fi
-
-
-# ./run.sh fulldata {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model 2 20 5 1 200 1e-4 5000 10000 epoch epoch True [path/to/local/data]
-# ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model 1 20 1000 1 200 1e-5 100 100 steps steps True [path/to/local/data]
-# ./run.sh zeroshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model 1 20 5 1 200 1e-5 100 100 steps steps True [path/to/local/data] (some arguments are placeholders only)
-
-
-# ./run.sh fulldata drop saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 2 20 5 1 200 1e-4 5000 10000 epoch epoch True
-# ./run.sh fewshot drop saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 1 20 1000 1 200 1e-5 100 100 steps steps True
-# ./run.sh zeroshot drop saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 1 20 5 1 200 1e-5 100 100 steps steps True
-
-# ./run.sh fulldata nqopen saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 2 20 5 1 200 1e-4 5000 10000 epoch epoch True /home/t-wzhong/promptqa/promptQA/datasets/natural_questions_with_dpr_para/
-# ./run.sh fewshot nqopen saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 1 20 1000 1 200 1e-5 100 100 steps steps True /home/t-wzhong/promptqa/promptQA/datasets/natural_questions_with_dpr_para/
-# ./run.sh zeroshot nqopen saved_models f1 /home/t-wzhong/v-wanzho/promptQA/model/pretrain_qapairs_extractive200w_bsz640_qapairs_abstractive_multirc-v11-5epoch-sametask-format-softprompt/checkpoint-40000 1 20 5 1 200 1e-5 100 100 steps steps True /home/t-wzhong/promptqa/promptQA/datasets/natural_questions_with_dpr_para/
-

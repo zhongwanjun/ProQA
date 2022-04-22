@@ -65,7 +65,6 @@ from transformers.utils.versions import require_version
 # Will error if the minimal version of Transformers is not installed. Remove at your own risks.
 # check_min_version("4.12.0.dev0")
 
-require_version("datasets>=1.8.0", "To fix: pip install -r examples/pytorch/translation/requirements.txt")
 logger = logging.getLogger(__name__)
 
 # A list of all multilingual tokenizer which require src_lang and tgt_lang attributes.
@@ -282,7 +281,7 @@ class DataTrainingArguments:
         metadata={"help": "The name of the column in the datasets containing the questions (for question answering)."},
     )
     prompt_number: Optional[int] = field(
-        default=20,
+        default=100,
         metadata={"help": "The name of the column in the datasets containing the answers (for question answering)."},
     )
     add_task_prompt: Optional[bool] = field(
@@ -303,18 +302,7 @@ class DataTrainingArguments:
         default=False,
         metadata={"help": "whether to reload prompt from format-corresponding task prompt"}
     )
-    task_b_name: Optional[str] = field(
-        default=None,
-        metadata={
-            'help': 'task b name for continual learning'
-        }
-    )
-    continual_task_a_name: Optional[str] = field(
-        default=None,
-        metadata={
-            'help': 'task a name for continual learning'
-        }
-    )
+
 
 
     def __post_init__(self):
@@ -413,15 +401,6 @@ def main():
     # Set seed before initializing model.
     set_seed(training_args.seed)
 
-    # Get the datasets: you can either provide your own JSON training and evaluation files (see below)
-    # or just provide the name of one of the public datasets available on the hub at https://huggingface.co/datasets/
-    # (the dataset will be downloaded automatically from the datasets Hub).
-    #
-    # For translation, only JSON files are supported, with one field named "translation" containing two keys for the
-    # source and target languages (unless you adapt what follows).
-    #
-    # In distributed training, the load_dataset function guarantee that only one local process can concurrently
-    # download the dataset.
     if data_args.dataset_name is not None and data_args.dataset_name not in ['newsqa', 'nqopen', 'multirc', 'boolq_np', 'mctest', 'social_iqa']:
         # Downloading and loading a dataset from the hub.
         raw_datasets = load_dataset(
@@ -504,39 +483,8 @@ def main():
 
     model.resize_token_embeddings(len(tokenizer))
     #reload format specific task-prompt for newly involved task
-    if data_args.continual_task_a_name is not None:
-        task_start_id = data_args.prompt_number * len(format2dataset.keys())
-        a_task_id = task_start_id + task2id[data_args.continual_task_a_name] * data_args.prompt_number
-        a_format_id = format2id[dataset2format[data_args.continual_task_a_name]]
-        b_task_id = task_start_id + task2id[data_args.dataset_name] * data_args.prompt_number
-        b_format_id = format2id[dataset2format[data_args.dataset_name]]
-        # a_format_task_id = task_start_id + task2id[dataset2format[data_args.continual_task_a_name]] * data_args.prompt_number
-        model.state_dict()['encoder.prompt_embeddings.weight'][b_task_id:b_task_id + data_args.prompt_number, :] = \
-        model.state_dict()['encoder.prompt_embeddings.weight'][a_task_id:a_task_id + data_args.prompt_number,:]
 
-        model.state_dict()['encoder.prompt_embeddings.weight'][b_format_id * data_args.prompt_number:(b_format_id + 1) * data_args.prompt_number, :] = \
-            model.state_dict()['encoder.prompt_embeddings.weight'][a_format_id * data_args.prompt_number:(a_format_id + 1) * data_args.prompt_number,:]
-        # model.state_dict()['encoder.prompt_embeddings.weight'][b_task_id:b_task_id + data_args.prompt_number, :] = \  
-        #     model.state_dict()['encoder.prompt_embeddings.weight'][a_task_id:a_task_id + data_args.prompt_number, :]
-        logger.info(
-            f'Successfully initialize format and task prompt {data_args.dataset_name} from task {data_args.continual_task_a_name}, task a id {a_task_id}, task b id {b_task_id}')
-    elif data_args.load_from_format_task_id and (data_args.dataset_name not in seed_datasets) and not data_args.reload_from_trained_prompt and (data_args.dataset_name!=data_args.task_b_name) and data_args.task_b_name:
-        data_args.trained_prompt_path = f'/home/t-wzhong/v-wanzho/promptQA/model/few-shot/pretrain_paq_extractive_qapairs_abstractive_multirc-v11-5epoch-task-format-softprompt/{data_args.task_b_name}/fewshot/prompt_embedding_info'
-        prompt_info = torch.load(data_args.trained_prompt_path)
-        task_start_id = data_args.prompt_number * len(format2dataset.keys())
-
-        b_task_id = task_start_id + task2id[data_args.task_b_name] * data_args.prompt_number
-        b_format_id = format2id[dataset2format[data_args.task_b_name]]
-        # a_format_task_id = task_start_id + task2id[dataset2format[data_args.continual_task_a_name]] * data_args.prompt_number
-        model.state_dict()['encoder.prompt_embeddings.weight'][b_task_id:b_task_id + data_args.prompt_number, :] = \
-            prompt_info['encoder.prompt_embeddings.weight'][b_task_id:b_task_id + data_args.prompt_number, :]
-        model.state_dict()['encoder.prompt_embeddings.weight'][
-        b_format_id * data_args.prompt_number:(b_format_id + 1) * data_args.prompt_number, :] = \
-            prompt_info['encoder.prompt_embeddings.weight'][
-            b_format_id * data_args.prompt_number:(b_format_id + 1) * data_args.prompt_number, :]
-        logger.info(
-            f'Successfully restore task+format prompt for the task {data_args.task_b_name} from {data_args.trained_prompt_path}')
-    if data_args.load_from_format_task_id and (data_args.dataset_name not in seed_datasets) and not data_args.reload_from_trained_prompt and ((data_args.dataset_name==data_args.task_b_name) or not data_args.task_b_name):
+    if data_args.load_from_format_task_id and (data_args.dataset_name not in seed_datasets) and not data_args.reload_from_trained_prompt:
         task_start_id = data_args.prompt_number * len(format2dataset.keys())
         task_id = task_start_id + task2id[data_args.dataset_name] * data_args.prompt_number
         format_task_id = task_start_id + task2id[dataset2format[data_args.dataset_name]] * data_args.prompt_number
@@ -560,11 +508,6 @@ def main():
         logger.info(
             f'Successfully restore task+format prompt for the task {data_args.dataset_name} from {data_args.trained_prompt_path}')
 
-    if model_args.fix_t5:
-        for name, param in model.named_parameters():
-            if 'prompt' not in name:
-                param.requires_grad = False
-        logger.info('fixed t5 parameters')
     # Set decoder_start_token_id
     if model.config.decoder_start_token_id is None and isinstance(tokenizer, (MBartTokenizer, MBartTokenizerFast)):
         if isinstance(tokenizer, MBartTokenizer):
@@ -580,13 +523,13 @@ def main():
         device = torch.device("cuda")
         n_gpu = torch.cuda.device_count()
     
-#     model.to(device)
-#     if training_args.local_rank != -1:
-#         model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[training_args.local_rank],
-#                                                           output_device=training_args.local_rank,
-#                                                           find_unused_parameters=True)
-#     elif n_gpu > 1:
-#         model = torch.nn.DataParallel(model)
+    # model.to(device)
+    # if training_args.local_rank != -1:
+    #     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[training_args.local_rank],
+    #                                                       output_device=training_args.local_rank,
+    #                                                       find_unused_parameters=True)
+    # elif n_gpu > 1:
+    #     model = torch.nn.DataParallel(model)
     # Preprocessing the datasets.
     # We need to tokenize inputs and targets.
     if training_args.do_train:
@@ -608,14 +551,7 @@ def main():
             "label_smoothing is enabled but the `prepare_decoder_input_ids_from_labels` method is not defined for"
             f"`{model.__class__.__name__}`. This will lead to loss being calculated twice and will take up more memory"
         )
-    # def flatten(answers):
-    #     new_answers, metadata = [], []
-    #     for answer in answers:
-    #         assert type(answer)==list
-    #         metadata.append((len(new_answers), len(new_answers)+len(answer)))
-    #         new_answers += answer
-    #     return new_answers, metadata
-    # dataset_columns = question_answering_column_name_mapping.get(data_args.dataset_name, None)
+
 
     question_column = data_args.question_column
     context_column = data_args.context_column
@@ -680,18 +616,7 @@ def main():
         model_inputs['input_ids'] = input_ids  # [format_prompt_ids+input_ids for input_ids in model_inputs['input_ids']]
         model_inputs['attention_mask'] = [[1] * data_args.prompt_number * 2 + attention_mask for attention_mask in
                                           model_inputs['attention_mask']]
-        # task_id = task2id[data_args.dataset_name]
-        # format_id = format2id[dataset2format[data_args.dataset_name]]
-        # # model_inputs['task'] = [list(range(task_id*data_args.prompt_number,(task_id+1)*data_args.prompt_number)) for input in inputs]
-        # # model_inputs['format'] = [list(range(format_id*data_args.prompt_number,(format_id+1)*data_args.prompt_number)) for input in inputs]
-        # format_prompt_ids = [- (i + 1) for i in range(format_id * data_args.prompt_number, (
-        #             format_id + 1) * data_args.prompt_number)]  # list(range(-(format_id * data_args.prompt_number+1), -((format_id + 1) * data_args.prompt_number+1)))
-        # input_ids = copy.deepcopy([format_prompt_ids + input_ids for input_ids in model_inputs['input_ids']])
-        # model_inputs[
-        #     'input_ids'] = input_ids  # [format_prompt_ids+input_ids for input_ids in model_inputs['input_ids']]
-        # model_inputs['attention_mask'] = [[1] * data_args.prompt_number + attention_mask for attention_mask in
-        #                                   model_inputs['attention_mask']]
-        # print(model_inputs['input_ids'][0])
+
         return model_inputs
 
     def preprocess_validation_function(examples):
@@ -737,20 +662,7 @@ def main():
         model_inputs['input_ids'] = input_ids
         model_inputs['attention_mask'] = [[1] * data_args.prompt_number * 2 + attention_mask for attention_mask in
                                           model_inputs['attention_mask']]
-        # task_id = task2id[data_args.dataset_name]
-        # format_id = format2id[dataset2format[data_args.dataset_name]]
-        # # model_inputs['task'] = [list(range(task_id * data_args.prompt_number, (task_id + 1) * data_args.prompt_number))
-        # #                         for input in inputs]
-        # # model_inputs['format'] = [
-        # #     list(range(format_id * data_args.prompt_number, (format_id + 1) * data_args.prompt_number)) for input in
-        # #     inputs]
-        # format_prompt_ids = [- (i + 1) for i in range(format_id * data_args.prompt_number, (
-        #         format_id + 1) * data_args.prompt_number)]  # list(range(-(format_id * data_args.prompt_number+1), -((format_id + 1) * data_args.prompt_number+1)))
-        # input_ids = copy.deepcopy([format_prompt_ids + input_ids for input_ids in model_inputs['input_ids']])
-        # model_inputs['input_ids'] = input_ids
-        # model_inputs['attention_mask'] = [[1] * data_args.prompt_number + attention_mask for attention_mask in
-        #                                   model_inputs['attention_mask']]
-        # print(model_inputs['input_ids'][0])
+
         return model_inputs
 
     if training_args.do_train:
@@ -853,29 +765,7 @@ def main():
     # metric = load_metric("squad")
     def compute_metrics(p: EvalPrediction):
         return metric.compute(predictions=p.predictions, references=p.label_ids)
-    '''
-    from metrics import evaluate_squad
-    def compute_metrics(eval_preds):
-        preds, labels = eval_preds
-        if isinstance(preds, tuple):
-            preds = preds[0]
-        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
-        if data_args.ignore_pad_token_for_loss:
-            # Replace -100 in the labels as we can't decode them.
-            labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
- 
-        # Some simple post-processing
-        decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
-        # print(decoded_preds,decoded_labels)
-        # result = metric.compute(predictions=decoded_preds, references=decoded_labels)
-        # result = {"EM": result["exact_match"],"F1":result['f1']}
-        result = evaluate_squad(predictions=decoded_preds,labels=decoded_labels)
-        # prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
-        # result["gen_len"] = np.mean(prediction_lens)
-        result = {k: round(v, 4) for k, v in result.items()}
-        return result
-    '''
+
     # Initialize our Trainer
     trainer = QuestionAnsweringTrainer(
         model=model,
@@ -940,32 +830,11 @@ def main():
             best_model_path = os.path.join(training_args.output_dir, 'best-checkpoint')
             state_dict = torch.load(os.path.join(best_model_path,WEIGHTS_NAME), map_location="cpu")
             trainer._load_state_dict_in_model(state_dict)
-
-        metrics = trainer.evaluate(max_length=max_length, num_beams=num_beams, metric_key_prefix="eval")
+        max_length, num_beams, ignore_keys_for_eval = None, None, None
+        metrics = trainer.evaluate(max_length=max_length, num_beams=num_beams, ignore_keys=ignore_keys_for_eval,
+                                   metric_key_prefix="eval")
         max_eval_samples = data_args.max_eval_samples if data_args.max_eval_samples is not None else len(eval_dataset)
         metrics["eval_samples"] = min(max_eval_samples, len(eval_dataset))
-        if data_args.max_train_samples==32 and training_args.do_train:
-            pre = 'fewshot'
-        elif training_args.do_train:
-            pre = 'fulldata'
-        elif training_args.do_eval and not training_args.do_train and not data_args.reload_from_trained_prompt:
-            pre = 'zeroshot'
-        elif training_args.do_eval and not training_args.do_train and data_args.reload_from_trained_prompt:
-            pre = 'continual-testa'
-        else:
-            pre = 'unknown'
-        split_model_name = [item for item in model_args.model_name_or_path.strip('/').split('/') if 'pretrain' in item]
-        save_model_config = split_model_name[0]#'-'.join(split_model_name[-2:]) if 'checkpoint' in model_args.model_name_or_path else split_model_name[-1]+'-final'
-        result_path = os.path.join('/home/t-wzhong/v-wanzho/promptQA/eval_results/','{}_{}_{}_results.json'.format(data_args.dataset_name,pre,save_model_config))
-        with open(result_path,'a+',encoding='utf8') as outf:
-            import json
-            # if training_args.do_train:
-            #     metrics = trainer.state.best_metric
-            if pre=='continual-testa' or pre=='zeroshot':
-                metrics.update({'task_b':data_args.task_b_name})
-            metrics.update({'model_name_path': model_args.model_name_or_path})
-            json.dump(metrics,outf,indent=4)
-            print('Saving results to '+result_path)
         trainer.log_metrics("eval", metrics)
         trainer.save_metrics("eval", metrics)
 

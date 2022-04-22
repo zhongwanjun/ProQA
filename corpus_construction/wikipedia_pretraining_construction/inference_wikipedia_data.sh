@@ -1,5 +1,5 @@
 #preparing data
-export BASIC_DIR=/home/t-wzhong/v-wanzho/promptQA
+export BASIC_DIR='../../../'
 cd ../question_generation
 #extractive qa pairs
 export DATA_NAME=extractive

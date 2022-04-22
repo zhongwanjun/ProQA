@@ -1,24 +1,15 @@
-# ProQA
-## Prerequest
-```
-torch == 1.6.0
-transformers == 4.12.5
-nltk
-```
-## Pre-training
+#ProQA
+##Pre-training
 ```angular2html
 cd code/pretrain
 # the example pretrain script is shown in
 bash proqa_pretrain.sh
 ```
-(Note: to modify the number of soft prompts, you need to modify the data_args.prompt_num in the main script and the prompt_num in models/modeling_t5.py)
-## Training and evaluating on downstream tasks
-The nqopen|newsqa|mctest|social_iqa datasets use local preprocessed data, and the other datasets(squad,quoref,narrativeqa,drop,race,dream,...) use the huggingface datasets API for downloading.
-If you want to support more datasets or other tasks, you just need to add a function in the dataset_processors.py, and add corresponding evluation scripts (we support EM/F1/Accuracy/Rouge by now.)
+##Training and evaluating on downstream tasks
 ```angular2html
 cd code/downstream
 ```
-### Full data fine-tuning
+###Full data fine-tuning
 ```
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
 ./run.sh fulldata {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id [path/to/local/data]
@@ -26,15 +17,15 @@ example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets util
 example script for other dataset
 ./run.sh fulldata {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-### Few-shot Learning
+###Few-shot Learning
 ```
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id [path/to/local/data]
 
-example script for other dataset (squad,quoref,narrativeqa,drop,race,dream,...)
+example script for other dataset
 ./run.sh fewshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-### Zero-shot Learning
+###Zero-shot Learning
 ```
 #some arguments are used for placeholder only
 example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets utilize local data)
@@ -43,7 +34,7 @@ example script for nqopen|newsqa|mctest|social_iqa datasets (these datasets util
 example script for other dataset
 ./run.sh zeroshot {drop|squad|...} path/for/save/models {f1|em|rouge_l|accuracy} path/to/pretrained/model train_batch_size eval_batch_size epoch_num gradient_accumulation_step logging_steps learning_rate saving_steps eval_steps eval_strategy save_strategy load_from_format_task_id
 ```
-## Corpus Construction
+##Corpus Construction
 
 ### Question-Answer Pair Generation
 ```angular2html
@@ -68,7 +59,7 @@ bash inference_wikipedia_data.sh
 3. Generate pesudo QA-pair for pretraining from the inferred results
 python generate_pesudo_data.py [extractive_qapairs/abstractive_qapairs/multirc_qapairs_negopt/bool]
 ```
-### Filtering
+###Filtering
 ```
 cd corpus_construction/filtering
 
@@ -76,14 +67,14 @@ cd corpus_construction/filtering
 bash t5_filter.sh
 
 ```
-## Download Source
+##Download Source
 ### Download Pre-trained Model
 
-The pretrained QA model with training epochs as 5
+The pretrained QA model using 100 prompts (Note that we use 20 prompts for the experiment in the paper)
 
-- ProQA-Base (20 prompt)
-- ProQA-Base (100 prompt)
-- ProQA-Large (100 prompt)
+- ProQA-Base
+
+- ProQA-Large
 
 ### Download Synthesized Pre-training Corpus
 - Download generated QA-pairs corpus:

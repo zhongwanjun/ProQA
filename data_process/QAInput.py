@@ -1,7 +1,7 @@
 class StructuralQAInput:
     @classmethod
     def qg_input_abstrativeqa(cls, context, question, options=None):
-        question = question#.lower().capitalize()
+        question = question
         source_text = f'[TASK] [ABSTRACTIVE] [QUESTION] {question}. [CONTEXT] {context} the answer is: '
         return source_text
 

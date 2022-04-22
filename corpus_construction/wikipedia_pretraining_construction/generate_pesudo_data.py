@@ -222,7 +222,7 @@ if __name__=='__main__':
         source_file = 'result_paq_wiki400w_data_extractive_qapairs_t5-large.jsonl'
         merge_example_fn = transfer_example_extractive_qapairs
         # output_file = 'wiki100w_abstractive_qapairs_pesudo_training_data.jsonl'
-        output_file = '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/pesudo_qa_data/extractive/paq_wiki400w_data_extractive_qapairs_pesudo_training_data.jsonl'
+        output_file = os.path.join(basic_dir,'wikipedia_data/pesudo_qa_data/extractive/paq_wiki400w_data_extractive_qapairs_pesudo_training_data.jsonl')
         generate_data(source_file, merge_example_fn, output_file)
     elif type=='bool':
         basic_dir = os.path.join(basic_dir,'qg_data/qg_inference_data/squad_boolq')

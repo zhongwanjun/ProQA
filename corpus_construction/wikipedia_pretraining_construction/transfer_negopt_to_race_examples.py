@@ -3,12 +3,12 @@ import os
 import sys
 import random
 from tqdm import tqdm
-sys.path.append('/home/t-wzhong/v-wanzho/promptQA/code/data_process')
+sys.path.append('../../../code/data_process')
 from QGInput import QGInput
 from fuzzywuzzy import fuzz
 if __name__ == '__main__':
-    file_path = '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/qg_inference_data/multirc_negoption/result_wiki100w_data_multirc_negoption_t5-base.jsonl'
-    out_file_path = '/home/t-wzhong/v-wanzho/promptQA/wikipedia_data/qg_inference_data/race/wiki100w_data_multirc_t5basenegopt.jsonl'
+    file_path = '../../../wikipedia_data/qg_inference_data/multirc_negoption/result_wiki100w_data_multirc_negoption_t5-base.jsonl'
+    out_file_path = '../../..//wikipedia_data/qg_inference_data/race/wiki100w_data_multirc_t5basenegopt.jsonl'
     inf = open(file_path,'r',encoding='utf8')
     count = 0
     with open(out_file_path,'w',encoding='utf8') as outf:

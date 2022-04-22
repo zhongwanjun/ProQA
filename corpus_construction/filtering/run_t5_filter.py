@@ -39,7 +39,7 @@ os.environ["WANDB_DISABLED"] = "true"
 import transformers
 from transformers import (
     AutoConfig,
-    AutoModelForSeq2SeqLM,
+    # AutoModelForSeq2SeqLM,
     AutoTokenizer,
     DataCollatorForSeq2Seq,
     HfArgumentParser,
@@ -54,7 +54,7 @@ from transformers import (
     default_data_collator,
     set_seed,
 )
-
+from modeling_t5 import T5ForConditionalGeneration
 
 from transformers.trainer_utils import get_last_checkpoint
 from transformers.utils import check_min_version
@@ -350,7 +350,7 @@ def main():
         num_added_toks = tokenizer.add_special_tokens(special_tokens_dict)
         added_tokens = tokenizer.get_added_vocab()
         logger.info('Added tokens: {}'.format(added_tokens))
-    model = AutoModelForSeq2SeqLM.from_pretrained(
+    model = T5ForConditionalGeneration.from_pretrained(
         model_args.model_name_or_path,
         from_tf=bool(".ckpt" in model_args.model_name_or_path),
         config=config,

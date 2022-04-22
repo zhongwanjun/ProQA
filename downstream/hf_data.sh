@@ -17,7 +17,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
@@ -69,7 +69,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --max_train_samples 32 \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
@@ -121,7 +121,7 @@ LOAD_FROM_FORMAT_TASK_ID=${15}
 
 mkdir -p ${SAVING_PATH}
 
-python -m torch.distributed.launch --nproc_per_node=8 run_t5_softprompt_yujia.py \
+python -m torch.distributed.launch --nproc_per_node=8 run_proqa_downstream.py \
   --load_from_format_task_id ${LOAD_FROM_FORMAT_TASK_ID} \
   --model_name_or_path ${PRETRAIN_MODEL_PATH} \
   --output_dir ${SAVING_PATH} \
