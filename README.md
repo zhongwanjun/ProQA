@@ -76,24 +76,4 @@ cd corpus_construction/filtering
 bash t5_filter.sh
 
 ```
-## Download Source
-### Download Pre-trained Model
-
-The pretrained QA model with training epochs as 5
-
-- ProQA-Base (20 prompt)
-- ProQA-Base (100 prompt)
-- ProQA-Large (100 prompt)
-
-### Download Synthesized Pre-training Corpus
-- Download generated QA-pairs corpus:
-  
-- Download the preprocessed corpus from PAQ:
-
-- Download source Wikipedia data
-```angular2html
-
-```
-### Download Preprocessed Downstream Data
-For the nqopen | mctest | social_iqa datasets, we utilize preprocessed datasets from UnifiedQA, we can download it via this link.
 
