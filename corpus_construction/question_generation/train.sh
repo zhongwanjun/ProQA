@@ -6,8 +6,8 @@ export BASIC_DIR=../../../
 for DATA_NAME in race_negopt_withq
 do
 python -m torch.distributed.launch --nproc_per_node=8 run_qg.py \
-    --model_name_or_path t5-large \
-    --output_dir ${BASIC_DIR}/qg_model/t5-large-qg-${DATA_NAME} \
+    --model_name_or_path google/t5-v1_1-base \
+    --output_dir ${BASIC_DIR}/qg_model/t5-base-qg-${DATA_NAME} \
     --data_dir ${BASIC_DIR}/qg_data/${DATA_NAME}/ \
     --train_file_path train.jsonl \
     --valid_file_path validation.jsonl \
