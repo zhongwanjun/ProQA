@@ -1,4 +1,29 @@
 # ProQA
+# Citation
+Source code for the NAACL 2022 paper [ProQA: Structural Prompt-based Pre-training for Unified Question Answering](https://aclanthology.org/2022.naacl-main.313/). If you find the code useful, please cite our paper:
+```
+@inproceedings{zhong-etal-2022-proqa,
+    title = "{P}ro{QA}: Structural Prompt-based Pre-training for Unified Question Answering",
+    author = "Zhong, Wanjun  and
+      Gao, Yifan  and
+      Ding, Ning  and
+      Qin, Yujia  and
+      Liu, Zhiyuan  and
+      Zhou, Ming  and
+      Wang, Jiahai  and
+      Yin, Jian  and
+      Duan, Nan",
+    booktitle = "Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+    month = jul,
+    year = "2022",
+    address = "Seattle, United States",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.naacl-main.313",
+    doi = "10.18653/v1/2022.naacl-main.313",
+    pages = "4230--4243",
+    abstract = "Question Answering (QA) is a longstanding challenge in natural language processing. Existing QA works mostly focus on specific question types, knowledge domains, or reasoning skills. The specialty in QA research hinders systems from modeling commonalities between tasks and generalization for wider applications. To address this issue, we present ProQA, a unified QA paradigm that solves various tasks through a single model. ProQA takes a unified structural prompt as the bridge and improves the QA-centric ability by structural prompt-based pre-training. Through a structurally designed prompt-based input schema, ProQA concurrently models the knowledge generalization for all QA tasks while keeping the knowledge customization for every specific QA task. Furthermore, ProQA is pre-trained with structural prompt-formatted large-scale synthesized corpus, which empowers the model with the commonly-required QA ability. Experimental results on 11 QA benchmarks demonstrate that ProQA consistently boosts performance on both full data fine-tuning, few-shot learning, and zero-shot testing scenarios. Furthermore, ProQA exhibits strong ability in both continual learning and transfer learning by taking the advantages of the structural prompt.",
+}
+```
 ## Prerequest
 ```
 torch == 1.6.0
