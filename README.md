@@ -101,4 +101,7 @@ cd corpus_construction/filtering
 bash t5_filter.sh
 
 ```
-
+### Pre-trained Model
+1. [ProQA (20 prompts+paq)](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155102332_link_cuhk_edu_hk/ElA6k4awhEBNidd4JO_gl8gBG1B27ZQ5U9wYMqCZ5HCWkg?e=FUx8tZ)
+2. [ProQA (20 prompts+qapair)](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155102332_link_cuhk_edu_hk/EjHZZk8URW1JugNmdp2WbKsBou13ePwxF0h6KmPgU92t7Q?e=bADXrv)
+3. [ProQA (100 prompts)](https://mycuhk-my.sharepoint.com/:f:/g/personal/1155102332_link_cuhk_edu_hk/Elf3RD-l6IFNvlvFRRzulN0B_YgOtCxnnZVuDWgPEYZcIg?e=UjaxSr)
